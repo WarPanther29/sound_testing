@@ -56,7 +56,7 @@ def read_mic_values():
     return mic
 
 # Collect 100 samples per mic channel
-def collect_mic_samples(sample_count=100):
+def collect_mic_samples(sample_count=400):
     mic_data = [[] for _ in range(4)]
 
     print("Collecting mic samples...")
@@ -70,10 +70,10 @@ def collect_mic_samples(sample_count=100):
         else:
             print("Invalid read, skipping.")
 
-        # Maintain ~20Hz loop
+        # 
         elapsed = time.time() - start
-        if elapsed < 0.02:
-            time.sleep(0.02 - elapsed)
+        if elapsed < 0.01:
+            time.sleep(0.01 - elapsed)
 
     return mic_data
 
