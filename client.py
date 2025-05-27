@@ -8,7 +8,6 @@ import paho.mqtt.client as mqtt
 MQTT_BROKER = "192.168.178.56"
 MQTT_PORT = 1883
 MQTT_TOPIC = "microphones/values"
-MQTT_CLIENT_ID = "mic_publisher"
 
 # e-puck2
 I2C_CHANNEL = 12
@@ -73,8 +72,8 @@ def collect_mic_samples(sample_count=100):
 
         # Maintain ~20Hz loop
         elapsed = time.time() - start
-        if elapsed < 0.05:
-            time.sleep(0.05 - elapsed)
+        if elapsed < 0.02:
+            time.sleep(0.02 - elapsed)
 
     return mic_data
 
@@ -83,20 +82,21 @@ def main():
     client = mqtt.Client()
     client.connect(MQTT_BROKER, MQTT_PORT, 60)
 
-    mic_data = collect_mic_samples()
+    
+    for _ in range(10):
+        mic_data = collect_mic_samples()
+        payload = json.dumps({
+            "mic_0": mic_data[0],
+            "mic_1": mic_data[1],
+            "mic_2": mic_data[2],
+            "mic_3": mic_data[3]
+        })
 
-    payload = json.dumps({
-        "mic_0": mic_data[0],
-        "mic_1": mic_data[1],
-        "mic_2": mic_data[2],
-        "mic_3": mic_data[3]
-    })
-
-    result = client.publish(MQTT_TOPIC, payload)
-    if result[0] == 0:
-        print("Mic data published successfully.")
-    else:
-        print("Failed to publish mic data.")
+        result = client.publish(MQTT_TOPIC, payload)
+        if result[0] == 0:
+            print("Mic data published successfully.")
+        else:
+            print("Failed to publish mic data.")
 
     client.disconnect()
 
