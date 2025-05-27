@@ -64,7 +64,7 @@ except:
         print("Cannot open I2C device")
         sys.exit(1)
 
-# Continuous loop
+
 while True:
     start = time.time()
 
@@ -72,7 +72,7 @@ while True:
         mic_vals = read_mic_values()
         print("Mic values: {:4d}, {:4d}, {:4d}, {:4d}".format(*mic_vals))
 
-        # Find mic with max value
+        
         max_index = mic_vals.index(max(mic_vals))
         if(max(mic_vals) > 100):
             update_led_for_max_mic(max_index)
@@ -80,7 +80,7 @@ while True:
     else:
         print("Checksum error or communication failure")
 
-    # ~20 Hz loop
+    
     elapsed = time.time() - start
-    if elapsed < 0.05:
-        time.sleep(0.05 - elapsed)
+    if elapsed < 0.02:
+        time.sleep(0.02 - elapsed)
