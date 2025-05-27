@@ -74,7 +74,7 @@ while True:
 
         # Find mic with max value
         max_index = mic_vals.index(max(mic_vals))
-        if(max_index > 100):
+        if(max(mic_vals) > 100):
             update_led_for_max_mic(max_index)
 
     else:
