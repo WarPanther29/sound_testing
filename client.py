@@ -80,7 +80,7 @@ def collect_mic_samples(sample_count=100):
 
 # Main MQTT publisher
 def main():
-    client = mqtt.Client(MQTT_CLIENT_ID)
+    client = mqtt.Client()
     client.connect(MQTT_BROKER, MQTT_PORT, 60)
 
     mic_data = collect_mic_samples()
