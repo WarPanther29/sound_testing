@@ -60,8 +60,9 @@ def collect_mic_samples(sample_count=400):
     mic_data = [[] for _ in range(4)]
 
     print("Collecting mic samples...")
+    start = time.time()
     while len(mic_data[0]) < sample_count:
-        start = time.time()
+        #start = time.time()
 
         if update_robot() and verify_checksum():
             mic = read_mic_values()
@@ -71,10 +72,10 @@ def collect_mic_samples(sample_count=400):
             print("Invalid read, skipping.")
 
         # 
-        elapsed = time.time() - start
-        if elapsed < 0.01:
-            time.sleep(0.01 - elapsed)
-
+        #elapsed = time.time() - start
+        #if elapsed < 0.01:
+        #    time.sleep(0.01 - elapsed)
+    print("Mic samples collected in {:.2f} seconds.".format(time.time() - start))
     return mic_data
 
 # Main MQTT publisher
