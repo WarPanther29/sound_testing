@@ -74,9 +74,8 @@ while True:
 
         # Find mic with max value
         max_index = mic_vals.index(max(mic_vals))
-
-        # Update LED bitmask
-        update_led_for_max_mic(max_index)
+        if(max_index > 100):
+            update_led_for_max_mic(max_index)
 
     else:
         print("Checksum error or communication failure")
