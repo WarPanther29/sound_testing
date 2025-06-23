@@ -2,13 +2,22 @@ import serial
 import re
 import time
 import matplotlib.pyplot as plt
+import paho.mqtt.client as mqtt
 
-# === Config ===
+#Config
 SERIAL_PORT = "/dev/ttyACM2"  # or "COM3" on Windows
 BAUD_RATE = 115200
+MQTT_BROKER = "192.168.178.56"
+MQTT_PORT = 1883
+MQTT_TOPIC = "Microphones/Angle/left"
 
-# === Initialize plot ===
-plt.ion()
+
+mqtt_client = mqtt.Client()
+mqtt_client.connect(MQTT_BROKER, MQTT_PORT, 60)
+mqtt_client.loop_start()
+
+
+#Initialize plot
 fig, ax = plt.subplots()
 angle_line, = ax.plot([], [], 'ro-')
 ax.set_xlim(-1, 1)
@@ -21,7 +30,7 @@ def angle_to_vector(angle_deg):
     rad = angle_deg * 3.14159 / 180
     return [0, 0], [0.8 * math.cos(rad), 0.8 * math.sin(rad)]
 
-# === Main ===
+#Main
 with serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=1) as ser:
     print("Connected to", SERIAL_PORT)
     while True:
@@ -37,7 +46,8 @@ with serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=1) as ser:
 
             ts = [float(match.group(i)) for i in range(1, 5)]
             angle = float(match.group(5))
-
+            
+            mqtt_client.publish(MQTT_TOPIC, payload=str(angle))
             print(f"Timestamps: {ts}, Angle: {angle:.2f}°")
 
             # Update plot
@@ -50,3 +60,6 @@ with serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=1) as ser:
 
         except KeyboardInterrupt:
             break
+
+mqtt_client.loop_stop()
+mqtt_client.disconnect()
