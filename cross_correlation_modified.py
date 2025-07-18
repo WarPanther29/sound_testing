@@ -78,7 +78,7 @@ while True:
     mic_3.clear()
     
     start = time.time()
-    for _ in range(10):
+    for _ in range(20):
         if update_robot() and verify_checksum():
             mic_vals = read_mic_values()
             mic_0.append(mic_vals[0])
