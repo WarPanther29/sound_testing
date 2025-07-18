@@ -69,7 +69,7 @@ def calculate_lag(x, y):
     lag = np.argmax(corr) - (len(x) - 1)
     return lag, corr
 
-sample_range = 20
+sample_range = 30
 SOUND_SPEED = 343.0  # Speed of sound in m/s
 while True:
     mic_0.clear()
