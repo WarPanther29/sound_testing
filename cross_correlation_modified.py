@@ -133,7 +133,7 @@ while True:
                [lag01, lag02, dominant_freq])
     axs[1].set_title("Lags, and Dominant Frequency")
 
-    axs[2].plot(t, angle_deg, label='Angle (deg)', color='orange')
+    axs[2].plot(t, [angle_deg]* len(t), label='Angle (deg)', color='orange')
 
     plt.tight_layout()
     plot_filename = f"plots/snapshot_{plot_counter:03d}.svg"
