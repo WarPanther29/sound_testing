@@ -69,7 +69,7 @@ def calculate_lag(x, y):
     lag = np.argmax(corr) - (len(x) - 1)
     return lag, corr
 
-
+sample_range = 20
 SOUND_SPEED = 343.0  # Speed of sound in m/s
 while True:
     mic_0.clear()
@@ -78,7 +78,7 @@ while True:
     mic_3.clear()
     
     start = time.time()
-    for _ in range(20):
+    for _ in range(sample_range):
         if update_robot() and verify_checksum():
             mic_vals = read_mic_values()
             mic_0.append(mic_vals[0])
@@ -89,8 +89,8 @@ while True:
             print("Checksum error or communication failure")
     end = time.time()
     
-    sample_rate = 10 / (end - start)
-    t = np.arange(10) / sample_rate
+    sample_rate = sample_range / (end - start)
+    t = np.arange(sample_range) / sample_rate
 
     # FFT to find dominant frequency
     #fft_result = fft(mic_0)
@@ -118,7 +118,7 @@ while True:
     angle_deg = np.degrees(angle_rad) % 360
 
     # Plot
-    fig, axs = plt.subplots(2, 1, figsize=(10, 6))
+    fig, axs = plt.subplots(3, 1, figsize=(10, 6))
 
     axs[0].plot(t, mic_0, label='Mic 0')
     axs[0].plot(t, mic_1, label='Mic 1')
@@ -129,9 +129,11 @@ while True:
     axs[0].set_ylabel("Amplitude")
     axs[0].legend()
 
-    axs[1].bar(['Lag01', 'Lag02', 'Angle (deg)', 'Freq (Hz)'],
-               [lag01, lag02, angle_deg, dominant_freq])
-    axs[1].set_title("Lags, Angle, and Dominant Frequency")
+    axs[1].bar(['Lag01', 'Lag02', 'Freq (Hz)'],
+               [lag01, lag02, dominant_freq])
+    axs[1].set_title("Lags, and Dominant Frequency")
+
+    axs[2].plot(t, angle_deg, label='Angle (deg)', color='orange')
 
     plt.tight_layout()
     plot_filename = f"plots/snapshot_{plot_counter:03d}.svg"
