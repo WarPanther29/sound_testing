@@ -3,7 +3,7 @@ from smbus2 import SMBus, i2c_msg
 import sys
 import time
 import matplotlib.pyplot as plt
-from scipy.fft import fft, fftfreq
+from scipy import fftpack
 import os
 
 I2C_CHANNEL = 12
@@ -93,10 +93,17 @@ while True:
     t = np.arange(10) / sample_rate
 
     # FFT to find dominant frequency
-    fft_result = fft(mic_0)
-    freqs = fftfreq(len(mic_0), d=1/sample_rate)
-    idx = np.argmax(np.abs(fft_result[:len(freqs)//2]))
-    dominant_freq = freqs[idx]
+    #fft_result = fft(mic_0)
+    #freqs = fftfreq(len(mic_0), d=1/sample_rate)
+    #idx = np.argmax(np.abs(fft_result[:len(freqs)//2]))
+    #dominant_freq = freqs[idx]
+
+    fft_result = fftpack.fft(mic_0)
+    freqs = fftpack.fftfreq(len(mic_0), d=1/sample_rate)
+    positive_freqs = freqs[:len(freqs)//2]
+    positive_fft = fft_result[:len(freqs)//2]
+    idx = np.argmax(np.abs(positive_fft))
+    dominant_freq = positive_freqs[idx]
 
     # Cross-correlation lag calculation
     lag01, corr01 = calculate_lag(np.array(mic_0), np.array(mic_1))
