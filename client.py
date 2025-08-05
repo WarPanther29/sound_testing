@@ -88,6 +88,7 @@ def main():
     while True:
         #mic_data = collect_mic_samples()
         mic_data = read_mic_values()
+        print(mic_data)
         payload = json.dumps({f"m{i}": v for i, v in enumerate(mic_data)})
 
         result = client.publish(MQTT_TOPIC, payload)
