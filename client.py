@@ -54,7 +54,7 @@ def read_mic_values():
         mic[i] = sensors_data[32 + i*2 + 1] * 256 + sensors_data[32 + i*2]
     return mic
 
-def collect_mic_samples(sample_count=400):
+def collect_mic_samples(sample_count=1):
     mic_data = [[] for _ in range(4)]
 
     print("Collecting mic samples...")
