@@ -54,27 +54,12 @@ def read_mic_values():
         mic[i] = sensors_data[32 + i*2 + 1] * 256 + sensors_data[32 + i*2]
     return mic
 
-def collect_mic_samples(sample_count=1):
-    mic_data = [[] for _ in range(4)]
-
-    print("Collecting mic samples...")
-    start = time.time()
-    while len(mic_data[0]) < sample_count:
-        #start = time.time()
-
+def collect_mic_samples():
+    while True:
         if update_robot() and verify_checksum():
-            mic_data = read_mic_values()
-            #for i in range(4):
-            #    mic_data[i].append(mic[i])
+            return read_mic_values()
         else:
-            print("Invalid read, skipping.")
-
-        # 
-        #elapsed = time.time() - start
-        #if elapsed < 0.01:
-        #    time.sleep(0.01 - elapsed)
-    print("Mic samples collected in {:.2f} seconds.".format(time.time() - start))
-    return mic_data
+            print("Invalid read, retrying.")
 
 
 def main():
@@ -86,9 +71,7 @@ def main():
     MQTT_TOPIC = f"robots/{number}/mics"
 
     while True:
-        #mic_data = collect_mic_samples()
-        mic_data = read_mic_values()
-        print(mic_data)
+        mic_data = collect_mic_samples()
         payload = json.dumps({f"m{i}": v for i, v in enumerate(mic_data)})
 
         result = client.publish(MQTT_TOPIC, payload)
