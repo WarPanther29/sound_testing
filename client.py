@@ -63,9 +63,9 @@ def collect_mic_samples(sample_count=1):
         #start = time.time()
 
         if update_robot() and verify_checksum():
-            mic = read_mic_values()
-            for i in range(4):
-                mic_data[i].append(mic[i])
+            mic_data = read_mic_values()
+            #for i in range(4):
+            #    mic_data[i].append(mic[i])
         else:
             print("Invalid read, skipping.")
 
